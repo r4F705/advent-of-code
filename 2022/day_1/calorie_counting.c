@@ -1,46 +1,44 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+// compare values with descending order
+int cmpfunc (const void * a, const void * b) {
+   return ( *(int*)b - *(int*)a);
+}
+
 int main(int argc, char **argv)
 {
-    if (argc < 2) {
-        printf("Provide the input path as a parameter\n");
-        return 0;
-    }
-
     // Open the file for reading
-    FILE *fd = fopen(argv[1], "r");
+    FILE *fd = fopen("input.txt", "r");
     if (fd == NULL) {
         perror("Error opening file");
         return -1;
     }
 
     // Read the file line by line
-    // TODO: For part two, fix bug in the case that one of the top three is after the max in will not be registered 
     char line[100];
-    int max_calories = 0;
-    int new_max_count = 0;
+    int calorie_sum_count = 0;
     int current_calories = 0;
-    int max_three_calories[] = {0, 0, 0};
+    int calorie_sums[1024] = {0};
+    int max_three_calories[3] = {0};
+
     while (fgets(line, 100, fd) != NULL) {
         current_calories += atoi(line);
         if (line[0] == '\n') {
-            if (max_calories < current_calories) {
-                max_calories = current_calories;
-                max_three_calories[new_max_count++ % 3] = max_calories; 
-                printf("Found an elf with more calories: %d\n", max_calories);
-            }
+            calorie_sums[calorie_sum_count++] = current_calories;
             current_calories = 0;
         }
     }
 
+    qsort(calorie_sums, sizeof(calorie_sums) / sizeof(int), sizeof(int), cmpfunc);
+
     int max_three_sum = 0;
-    for (size_t i = 0; i < sizeof(max_three_calories) / sizeof(int); i++)
+    for (size_t i = 0; i < 3; i++)
     {
-        max_three_sum += max_three_calories[i];
+        max_three_sum += calorie_sums[i];
     }
     
-    printf("The elf with the most calories has: %d\n", max_calories);
+    printf("The elf with the most calories has: %d\n", calorie_sums[0]);
     printf("The three elves with the most calories have in total: %d\n", max_three_sum);
 
     // Close the file
