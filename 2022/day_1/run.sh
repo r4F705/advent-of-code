@@ -1,1 +1,0 @@
-gcc -o calorie_counting calorie_counting.c ; time  ./calorie_counting input_test.txt
