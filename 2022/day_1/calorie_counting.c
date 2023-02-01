@@ -22,14 +22,19 @@ int main(int argc, char **argv)
     int calorie_sums[1024] = {0};
     int max_three_calories[3] = {0};
 
+    // Read line by line from open file
     while (fgets(line, 100, fd) != NULL) {
+        // Convert new line (calories) to int and add to current calories
+        // until a empty line is found which indicates the end for this elf
         current_calories += atoi(line);
         if (line[0] == '\n') {
+            // add calories sum to array 
             calorie_sums[calorie_sum_count++] = current_calories;
             current_calories = 0;
         }
     }
 
+    // sort 
     qsort(calorie_sums, sizeof(calorie_sums) / sizeof(int), sizeof(int), cmpfunc);
 
     int max_three_sum = 0;
