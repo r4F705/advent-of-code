@@ -1,0 +1,1 @@
+gcc -o rucksack_reorganization_part_two rucksack_reorganization_part_two.c && time  ./rucksack_reorganization_part_two ./input/part_two/input.txt
