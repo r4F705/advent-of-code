@@ -1,1 +1,1 @@
-gcc -o camp_cleanup camp_cleanup.c && time ./camp_cleanup ./input_test.txt
+gcc -o camp_cleanup camp_cleanup.c && time ./camp_cleanup ./input.txt
