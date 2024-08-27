@@ -41,4 +41,7 @@ func main() {
 	forest := NewForest(&data)
 	visibleTrees := forest.CountVisibleTrees()
 	fmt.Println("Visible trees:", visibleTrees)
+
+	maxScenicScore, coords := forest.MaxScenicScore()
+	fmt.Printf("Max scenic score is %d at tree (%d, %d)\n", maxScenicScore, coords[0], coords[1])
 }
