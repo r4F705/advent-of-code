@@ -65,7 +65,6 @@ func (g *Grid) String() string {
 			if i == g.Rope.Head.Y && j == g.Rope.Head.X {
 				str += "H"
 			} else if id := g.bodyInCell(i, j); id != -1 {
-				// str += "B"
 				str += strconv.Itoa(id)
 			} else if i == g.Rope.Tail.Y && j == g.Rope.Tail.X {
 				str += "T"
@@ -81,10 +80,11 @@ func (g *Grid) String() string {
 }
 
 func (g *Grid) bodyInCell(i, j int) int {
-	for id, bodyCell := range g.Rope.Body {
-		if bodyCell.X == j && bodyCell.Y == i {
-			return id
+	for k := 1; k < len(g.Rope.Knots)-1; k++ {
+		if g.Rope.Knots[k].X == j && g.Rope.Knots[k].Y == i {
+			return k
 		}
 	}
+
 	return -1
 }

@@ -26,12 +26,12 @@ func main() {
 		if mode {
 			// Test mode
 			dataFilepath = "input/test.txt"
-			rope = NewRope(Vector2{0, 4}, 0)
+			rope = NewRope(Vector2{0, 4}, 2)
 			grid = NewGrid(6, 5, rope)
 
 		} else {
 			dataFilepath = "input/prod.txt"
-			rope = NewRope(Vector2{500, 500}, 0)
+			rope = NewRope(Vector2{500, 500}, 2)
 			grid = NewGrid(1000, 1000, rope)
 		}
 
@@ -54,12 +54,12 @@ func main() {
 		if mode {
 			// Test mode
 			dataFilepath = "input/test_2.txt"
-			rope = NewRope(Vector2{11, 15}, 8)
+			rope = NewRope(Vector2{11, 15}, 10)
 			grid = NewGrid(27, 21, rope)
 
 		} else {
 			dataFilepath = "input/prod.txt"
-			rope = NewRope(Vector2{500, 500}, 8)
+			rope = NewRope(Vector2{500, 500}, 10)
 			grid = NewGrid(1000, 1000, rope)
 		}
 

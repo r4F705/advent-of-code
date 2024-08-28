@@ -1,112 +1,67 @@
 package main
 
 type Rope struct {
-	Head Vector2
-	Body []Vector2
-	Tail Vector2
+	Head  *Vector2
+	Tail  *Vector2
+	Knots []Vector2
 }
 
 func NewRope(initPos Vector2, bodyLength int) *Rope {
-	body := make([]Vector2, bodyLength)
+
+	if bodyLength < 2 {
+		panic("Rope must have at least 2 knots")
+	}
+
+	knots := make([]Vector2, bodyLength)
 	for i := 0; i < bodyLength; i++ {
-		body[i] = initPos
+		knots[i] = initPos
 	}
 	return &Rope{
-		Head: initPos,
-		Body: body,
-		Tail: initPos,
+		Knots: knots,
+		Head:  &knots[0],
+		Tail:  &knots[len(knots)-1],
 	}
 }
 
 func (r *Rope) Move(moveOrder *MoveOrder, update func()) {
-	newHead := r.Head
+	newHead := r.Knots[0]
 
 	switch moveOrder.Direction {
 	case "U":
 		for i := 0; i < moveOrder.Amount; i++ {
 			newHead.Y -= 1
-			if len(r.Body) > 0 {
-				r.moveTail(r.Body[len(r.Body)-1])
-			} else {
-				r.moveTail(newHead)
-			}
-			r.moveBody(newHead)
-			r.moveHead(newHead)
+			r.moveKnots(newHead)
 			update()
 		}
 	case "R":
 		for i := 0; i < moveOrder.Amount; i++ {
 			newHead.X += 1
-			if len(r.Body) > 0 {
-				r.moveTail(r.Body[len(r.Body)-1])
-			} else {
-				r.moveTail(newHead)
-			}
-			r.moveBody(newHead)
-			r.moveHead(newHead)
+			r.moveKnots(newHead)
 			update()
 		}
 	case "D":
 		for i := 0; i < moveOrder.Amount; i++ {
 			newHead.Y += 1
-			if len(r.Body) > 0 {
-				r.moveTail(r.Body[len(r.Body)-1])
-			} else {
-				r.moveTail(newHead)
-			}
-			r.moveBody(newHead)
-			r.moveHead(newHead)
+			r.moveKnots(newHead)
 			update()
 		}
 	case "L":
 		for i := 0; i < moveOrder.Amount; i++ {
 			newHead.X -= 1
-			if len(r.Body) > 0 {
-				r.moveTail(r.Body[len(r.Body)-1])
-			} else {
-				r.moveTail(newHead)
-			}
-			r.moveBody(newHead)
-			r.moveHead(newHead)
+			r.moveKnots(newHead)
 			update()
 		}
 	}
 }
 
-func (r *Rope) moveHead(newPos Vector2) {
-	r.Head = newPos
-}
-
-func (r *Rope) moveBody(newPos Vector2) {
-	if len(r.Body) > 0 {
-		var moveMade Vector2
-		for i := 0; i < len(r.Body); i++ {
-			part := &r.Body[i]
-			if i == 0 && newPos.Distance(*part) >= 2 {
-				moveMade = newPos.Difference(*part)
-				part.X = r.Head.X
-				part.Y = r.Head.Y
-				newPos = *part
-			} else if i > 0 && newPos.Distance(*part) >= 2 {
-				part.X += moveMade.X
-				part.Y += moveMade.Y
-				newPos = *part
-			}
+func (r *Rope) moveKnots(newPos Vector2) {
+	for i, knot := range r.Knots {
+		if i == 0 {
+			r.Knots[i] = newPos
+		} else if knot.Distance(r.Knots[i-1]) >= 2 {
+			direction := r.Knots[i-1].Difference(knot).Normalize()
+			r.Knots[i].X += direction.X
+			r.Knots[i].Y += direction.Y
 		}
 	}
-
-}
-
-func (r *Rope) moveTail(newPos Vector2) {
-
-	// if len(r.Body) > 0 {
-	// 	if newPos.Distance(r.Tail) >= 2 {
-	// 		r.Tail = newPos
-	// 	}
-	// } else {
-	// 	if newPos.Distance(r.Tail) >= 2 {
-	// 		r.Tail = r.Head
-	// 	}
-	// }
-
 }
